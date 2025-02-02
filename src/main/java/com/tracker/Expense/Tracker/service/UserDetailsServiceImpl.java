@@ -1,6 +1,7 @@
 package com.tracker.Expense.Tracker.service;
 
 import com.tracker.Expense.Tracker.entities.UserInfo;
+import com.tracker.Expense.Tracker.eventProducer.UserInfoEvent;
 import com.tracker.Expense.Tracker.eventProducer.UserInfoProducer;
 import com.tracker.Expense.Tracker.model.UserInfoDto;
 import com.tracker.Expense.Tracker.repository.UserRepository;
@@ -48,9 +49,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         String userId = UUID.randomUUID().toString();
         userRepository.save(new UserInfo(userId, userInfoDto.getUsername(),userInfoDto.getPassword(),  new HashSet<>()));
-        userInfoProducer.sendEventToKafka(userInfoDto);
+        userInfoProducer.sendEventToKafka(userInfoEventToPublish(userInfoDto,userId));
 
         return true;
+    }
+
+    private UserInfoEvent userInfoEventToPublish(UserInfoDto userInfoDto, String userId){
+        return UserInfoEvent.builder()
+                .userId(userId)
+                .firstName(userInfoDto.getUsername())
+                .lastName(userInfoDto.getLastName())
+                .email(userInfoDto.getEmail())
+                .phoneNumber(userInfoDto.getPhoneNumber()).build();
+
     }
 
 

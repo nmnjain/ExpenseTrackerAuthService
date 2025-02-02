@@ -1,6 +1,7 @@
 package com.tracker.Expense.Tracker.serializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tracker.Expense.Tracker.eventProducer.UserInfoEvent;
 import com.tracker.Expense.Tracker.model.UserInfoDto;
 import org.apache.catalina.User;
 import org.apache.kafka.common.header.Headers;
@@ -8,7 +9,7 @@ import org.apache.kafka.common.serialization.Serializer;
 
 import java.util.Map;
 
-public class UserInfoSerializer implements Serializer<UserInfoDto> {
+public class UserInfoSerializer implements Serializer<UserInfoEvent> {
 
     @Override
     public void configure(Map<String, ?> configs, boolean isKey) {
@@ -17,7 +18,7 @@ public class UserInfoSerializer implements Serializer<UserInfoDto> {
 
 
     @Override
-    public byte[] serialize(String args0, UserInfoDto args1) {
+    public byte[] serialize(String args0, UserInfoEvent args1) {
         byte[] retVal = null;
         ObjectMapper objectMapper = new ObjectMapper();
             try{
